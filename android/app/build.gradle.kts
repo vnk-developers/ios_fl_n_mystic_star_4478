@@ -1,12 +1,23 @@
+
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    // Flutter plugin має бути після Android та Kotlin
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Завантаження секретів з android/key.properties (за наявності)
+val keystoreProps = Properties().apply {
+    val f = rootProject.file("key.properties")
+    if (f.exists()) {
+        f.inputStream().use { load(it) }
+    }
+}
+
 android {
-    namespace = "com.game.mystic.star.journey"
+    namespace = "com.kostya.mystic_star_journey"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -30,11 +41,37 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        // Створюємо release signingConfig лише якщо key.properties існує
+        if (keystoreProps.isNotEmpty()) {
+            create("release") {
+                keyAlias = keystoreProps["keyAlias"] as String
+                keyPassword = keystoreProps["keyPassword"] as String
+                storeFile = file(keystoreProps["storeFile"] as String)
+                storePassword = keystoreProps["storePassword"] as String
+                // enableV1Signing = true
+                // enableV2Signing = true
+                // enableV3Signing = true
+            }
+        }
+    }
+
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+        getByName("release") {
+            // підключаємо підписання, якщо сконфігуровано
+            if (signingConfigs.findByName("release") != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            // Увімкнути мінімізатор за бажанням:
+            // isMinifyEnabled = true
+            // isShrinkResources = true
+            // proguardFiles(
+            //     getDefaultProguardFile("proguard-android-optimize.txt"),
+            //     "proguard-rules.pro"
+            // )
+        }
+        getByName("debug") {
+            // debug підписується стандартним debug-ключем
         }
     }
 }
