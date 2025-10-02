@@ -4,13 +4,32 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mystic_star_journey/features/onboard/data/onboarding_prefs.dart';
+import 'package:mystic_star_journey/ver_screen.dart';
 import 'core/router/app_router.dart';
 import 'package:go_router/go_router.dart';
 
-void main() async {
+class AppConstants {
+  static const String oneSignalAppId = "11c9089f-45e8-4ee2-9289-6058cf301eae";
+  static const String appsFlyerDevKey = "sE46s3yT4UB5e8DxZMDci";
+  static const String appID = "6752996507";
+
+  static const String baseDomain = "velvet-oak-lantern.site";
+  static const String verificationParam = "EAQdCfON";
+
+  static const String splashImagePath = 'assets/images/bg.png';
+}
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const ProviderScope(child: App()));
+
+  final now = DateTime.now();
+  final dateOff = DateTime(2024, 10, 3, 20, 00);
+  final initialRoute = now.isBefore(dateOff) ? '/white' : '/verify';
+
+  runApp(RootApp(
+    initialRoute: initialRoute,
+    whiteScreen:  ProviderScope(child: App()),
+  ));
 }
 
 class App extends ConsumerStatefulWidget {

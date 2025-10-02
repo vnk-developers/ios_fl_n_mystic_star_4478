@@ -44,6 +44,17 @@ dependencies:
   flutter_native_splash: ^2.4.6
   just_audio: ^0.10.5
   auto_size_text: ^3.0.0
+  permission_handler: ^12.0.1
+  video_player: ^2.10.0
+  onesignal_flutter: ^5.1.2
+  appsflyer_sdk: ^6.16.21
+  http: ^1.2.1
+  advertising_id: ^2.0.0
+  flutter_inappwebview: ^6.1.5
+  external_app_launcher: ^4.0.3
+  app_tracking_transparency: ^2.0.6+1
+  device_info_plus: ^11.4.0
+  url_launcher: ^6.3.1
 
 
 dev_dependencies:
